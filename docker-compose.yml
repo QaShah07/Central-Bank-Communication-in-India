@@ -2,10 +2,7 @@ version: '3.8'
 services:
   db:
     image: postgres:14
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: centralbank
+    env_file: .env
     ports:
       - "5432:5432"
 
@@ -18,11 +15,8 @@ services:
     build: ./backend
     volumes:
       - ./backend:/app
-    environment:
-      - DB_HOST=db
-      - DB_NAME=centralbank
-      - DB_USER=user
-      - DB_PASS=pass
+    env_file:
+      - ./backend/.env
     ports:
       - "8000:8000"
     depends_on:
@@ -33,6 +27,8 @@ services:
     build: ./frontend
     volumes:
       - ./frontend:/app
+    env_file:
+      - ./frontend/.env
     ports:
       - "5173:5173"
     depends_on:
