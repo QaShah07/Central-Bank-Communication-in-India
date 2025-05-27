@@ -1,11 +1,24 @@
 # backend/team/models.py
+
 from django.db import models
 
 class TeamMember(models.Model):
+    CATEGORY_CHOICES = [
+        ('research', 'Research Team'),
+        ('collaborator', 'Collaborators'),
+    ]
+
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
-    photo = models.ImageField(upload_to='team_photos/')  # store images in media/team_photos/
+    photo = models.ImageField(upload_to='team_photos/')
     bio = models.TextField(blank=True)
 
+    # NEW: which group this person belongs to
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+        default='research'
+    )
+
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.get_category_display()})"

@@ -1,9 +1,10 @@
 // src/App.jsx
-import React from 'react';
-import Header from './components/Header';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import AppRoutes from './routes';
+
+import React from 'react'
+import Header from './components/Header'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+import AppRoutes from './routes'  // <-- your routes file
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
       </main>
       <Footer />
     </>
-  );
+  )
 }
 
-export default App;
+export default App
