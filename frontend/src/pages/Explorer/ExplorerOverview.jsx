@@ -1,7 +1,7 @@
 // src/pages/Explorer/ExplorerOverview.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ExplorerLinkCard from '../../components/ExplorerLinkCard';
+// import ExplorerLinkCard from '../../components/ExplorerLinkCard';
 
 const explorerPages = [
   {

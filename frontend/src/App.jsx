@@ -1,22 +1,19 @@
 // src/App.jsx
+import React from 'react';
+// import Header from './components/Header';
+// import Navbar from './components/Navbar';
+// import Footer from './components/Footer';
+import AppRoutes from './routes'; // <–– your routes file
 
-import React from 'react'
-import Header from './components/Header'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import AppRoutes from './routes'  // <-- your routes file
-
-function App() {
+export default function App() {
   return (
     <>
-      <Header />
-      <Navbar />
-      <main className="min-h-screen">
+      {/* <Header /> */}
+      {/* <Navbar /> */}
+      <main>
         <AppRoutes />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </>
-  )
+  );
 }
-
-export default App
