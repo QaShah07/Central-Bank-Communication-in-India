@@ -6,4 +6,4 @@ from .models import TeamMember
 class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMember
-        fields = ['id', 'name', 'role', 'photo', 'bio', 'category']
+        fields = ['id', 'name', 'role', 'photo','linkedin_url', 'bio', 'category']

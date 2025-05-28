@@ -11,6 +11,7 @@ class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
     photo = models.ImageField(upload_to='team_photos/')
+    linkedin_url = models.URLField(blank=True, null=True)
     bio = models.TextField(blank=True)
 
     # NEW: which group this person belongs to
