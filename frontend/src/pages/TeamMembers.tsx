@@ -4,7 +4,7 @@ import api from '../services/api';
 import { TeamMember } from '../data/teamData';
 import { Users } from 'lucide-react';
 
-export default function TeamMembers() {
+export default function TeamPage() {
   const [researchTeam, setResearchTeam] = useState<TeamMember[]>([]);
   const [collaborators, setCollaborators] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,8 +62,9 @@ export default function TeamMembers() {
                 name={member.name}
                 role={member.role}
                 photo={member.photo}
+                area_of_work={member.area_of_work}
                 affiliation={member.affiliation}
-                linkedinUrl={member.linkedinUrl}
+                profileUrl={member.profileUrl}
               />
             ))}
           </div>
@@ -79,8 +80,9 @@ export default function TeamMembers() {
                 name={member.name}
                 role={member.role}
                 photo={member.photo}
+                area_of_work={member.area_of_work}
                 affiliation={member.affiliation}
-                linkedinUrl={member.linkedinUrl}
+                profileUrl={member.profileUrl}
               />
             ))}
           </div>

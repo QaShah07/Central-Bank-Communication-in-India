@@ -4,9 +4,11 @@ export interface TeamMember {
   role: string;
   photo: string;
   category: 'research' | 'collaborator';
+  area_of_work?: string;
   affiliation?: string;
-  linkedinUrl?: string;
+  profileUrl?: string;
 }
+
 
 // export const teamMembers: TeamMember[] = [
 //   {

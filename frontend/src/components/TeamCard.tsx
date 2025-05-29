@@ -1,47 +1,53 @@
 import React from 'react';
-import { Linkedin } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
 interface TeamCardProps {
   name: string;
   role: string;
   photo: string;
+  area_of_work?: string;
   affiliation?: string;
-  linkedinUrl?: string;
+  profileUrl?: string;
 }
 
-export default function TeamCard({ name, role, photo, affiliation, linkedinUrl }: TeamCardProps) {
+export default function TeamCard({ name, role, photo, area_of_work, affiliation, profileUrl }: TeamCardProps) {
   const handleProfileClick = () => {
-    if (linkedinUrl) {
-      window.open(linkedinUrl, '_blank');
+    if (profileUrl) {
+      window.open(profileUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
   return (
-    <div className="flex flex-col items-center text-center group hover:transform hover:scale-105 transition-all duration-300">
+    <div className="flex flex-col items-center text-center group">
       <div 
         onClick={handleProfileClick}
-        className={`relative w-48 h-48 rounded-full overflow-hidden mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border-4 border-white cursor-pointer group`}
+        className={`relative w-48 h-48 rounded-full overflow-hidden mb-4 shadow-lg border-4 border-white transition-all duration-300 ${profileUrl ? 'hover:cursor-pointer hover:border-blue-500 hover:shadow-xl' : ''}`}
       >
         <img
           src={photo}
           alt={name}
-          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        {linkedinUrl && (
+        {profileUrl && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Linkedin className="w-8 h-8 text-white" />
+            <ExternalLink className="w-8 h-8 text-white hover:cursor-pointer" />
           </div>
         )}
       </div>
       <h3 
         onClick={handleProfileClick}
-        className={`text-xl font-bold text-gray-900 mb-2 ${linkedinUrl ? 'cursor-pointer hover:text-blue-600' : ''}`}
+        className={`text-xl font-bold text-gray-900 mb-2 ${profileUrl ? 'hover:cursor-pointer hover:text-blue-600' : ''}`}
       >
         {name}
       </h3>
       <p className="text-md font-medium text-blue-600 mb-2">{role}</p>
+      {area_of_work && (
+        <p className="text-sm text-gray-600 max-w-[280px] leading-relaxed mb-2">
+          {area_of_work}
+        </p>
+      )}
       {affiliation && (
-        <p className="text-sm text-gray-600 max-w-[250px] leading-snug">
+        <p className="text-sm text-gray-500 italic">
           {affiliation}
         </p>
       )}
