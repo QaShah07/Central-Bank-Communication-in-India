@@ -11,7 +11,7 @@ class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
     photo = models.ImageField(upload_to='team_photos/')
-    profile_url = models.URLField(blank=True, null=True)
+    profileUrl = models.URLField(blank=True, null=True)
     area_of_work = models.TextField(blank=True)
 
     # NEW: which group this person belongs to
