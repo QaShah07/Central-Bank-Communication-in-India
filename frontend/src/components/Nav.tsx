@@ -1,7 +1,7 @@
 import React from 'react';
-import { Search } from 'lucide-react';
+// import { Search } from 'lucide-react'; // Uncomment if/when you fix Lucide-React types
 
-const Nav = () => {
+const Nav: React.FC = () => {
   return (
     <nav className="w-full bg-white">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -15,13 +15,15 @@ const Nav = () => {
           <a href="#outworks" className="hover:text-blue-600">Outworks</a>
           <a href="#outreach" className="hover:text-blue-600">Outreach</a>
           <a href="#contact" className="hover:text-blue-600">Contact</a>
-          {/* <button className="hover:text-blue-600">
+          {/* 
+          <button className="hover:text-blue-600">
             <Search size={20} />
-          </button> */}
+          </button> 
+          */}
         </div>
       </div>
     </nav>
   );
 };
 
-export default Nav
+export default Nav;

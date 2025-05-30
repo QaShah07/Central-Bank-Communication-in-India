@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Hero = () => {
+const Hero: React.FC = () => {
   return (
     <div className="relative h-[600px] w-full bg-[url('https://images.pexels.com/photos/4386442/pexels-photo-4386442.jpeg')] bg-cover bg-center">
       <div className="absolute inset-0 bg-black/50">
@@ -18,4 +18,4 @@ const Hero = () => {
   );
 };
 
-export default Hero
+export default Hero;

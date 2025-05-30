@@ -1,7 +1,22 @@
 import React from 'react';
 import { LineChart, BarChart, PieChart } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-const ToolCard = ({ icon: Icon, title, description }) => (
+// 1. Define the type for a tool
+type Tool = {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+};
+
+// 2. Define the props for ToolCard
+type ToolCardProps = {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+};
+
+const ToolCard: React.FC<ToolCardProps> = ({ icon: Icon, title, description }) => (
   <div className="bg-emerald-600 p-6 rounded-lg text-white">
     <div className="bg-white/10 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
       <Icon size={32} className="text-white" />
@@ -11,8 +26,8 @@ const ToolCard = ({ icon: Icon, title, description }) => (
   </div>
 );
 
-const InteractiveTools = () => {
-  const tools = [
+const InteractiveTools: React.FC = () => {
+  const tools: Tool[] = [
     {
       icon: LineChart,
       title: "Policy Rate Tracker",
