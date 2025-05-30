@@ -9,14 +9,15 @@ const Nav = () => {
           <span className="font-bold text-xl">Central Bank Communication in India</span>
         </div>
         <div className="flex items-center space-x-6">
-          <a href="#about" className="hover:text-blue-600">About</a>
-          <a href="#data" className="hover:text-blue-600">Data</a>
-          <a href="#publications" className="hover:text-blue-600">Publications</a>
-          <a href="#blogs" className="hover:text-blue-600">Blogs</a>
-          <a href="#podcasts" className="hover:text-blue-600">Podcasts</a>
-          <button className="hover:text-blue-600">
+          <a href="#teammembers" className="hover:text-blue-600">Team Members</a>
+          <a href="#mpc" className="hover:text-blue-600">MPC</a>
+          <a href="#explorer" className="hover:text-blue-600">Explorer</a>
+          <a href="#outworks" className="hover:text-blue-600">Outworks</a>
+          <a href="#outreach" className="hover:text-blue-600">Outreach</a>
+          <a href="#contact" className="hover:text-blue-600">Contact</a>
+          {/* <button className="hover:text-blue-600">
             <Search size={20} />
-          </button>
+          </button> */}
         </div>
       </div>
     </nav>
