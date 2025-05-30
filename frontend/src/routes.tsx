@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import TeamMembers from "./pages/TeamMembers";
 // import OurWorks from "./pages/OurWorks";
 // import Outreach from "./pages/Outreach";
-// import ContactForm from "./pages/ContactForm";
+import ContactForm from "./pages/ContactForm";
 
 // // MPC subpages
 // import MPCOverview from "./pages/MPC/MPCOverview";
@@ -58,8 +58,8 @@ const AppRoutes: React.FC = () => {
 
         {/* Other single‐page routes */}
         {/* <Route path="/ourworks" element={<OurWorks />} />
-        <Route path="/outreach" element={<Outreach />} />
-        <Route path="/contact" element={<ContactForm />} /> */}
+        <Route path="/outreach" element={<Outreach />} /> */}
+        <Route path="/contact" element={<ContactForm />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

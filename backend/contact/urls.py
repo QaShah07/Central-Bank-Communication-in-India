@@ -1,11 +1,8 @@
 # backend/contact/urls.py
-from rest_framework.routers import DefaultRouter
-from django.urls import include, path
-from .views import ContactSubmissionViewSet
 
-router = DefaultRouter()
-router.register(r'', ContactSubmissionViewSet)  # /api/contact/
+from django.urls import path
+from .views import ContactSubmissionCreateAPIView
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', ContactSubmissionCreateAPIView.as_view(), name='contact-create'),
 ]
