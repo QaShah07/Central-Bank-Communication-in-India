@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 // import HomePage from "./pages/HomePage";
 import LandingPage from "./pages/LandingPage";
 import TeamMembers from "./pages/TeamMembers";
+import OurWorks from "./pages/OurWorks";
 // import OurWorks from "./pages/OurWorks";
 // import Outreach from "./pages/Outreach";
 // import ContactForm from "./pages/ContactForm";
@@ -37,6 +38,7 @@ const AppRoutes: React.FC = () => {
         {/* Team Members */}
         <Route path="/team" element={<TeamMembers />} />
         <Route path="/landing" element={<LandingPage />} />
+        <Route path="/OurWorks" element={<OurWorks />} />
 
         {/* MPC Section */}
         {/* <Route path="/mpc" element={<MPCOverview />}>

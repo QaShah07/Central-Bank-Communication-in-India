@@ -1,5 +1,6 @@
 import React from 'react';
 // import { Search } from 'lucide-react'; // Uncomment if/when you fix Lucide-React types
+import { Link } from 'react-router-dom';
 
 const Nav: React.FC = () => {
   return (
@@ -9,10 +10,10 @@ const Nav: React.FC = () => {
           <span className="font-bold text-xl">Central Bank Communication in India</span>
         </div>
         <div className="flex items-center space-x-6">
-          <a href="#teammembers" className="hover:text-blue-600">Team Members</a>
+          <Link to="/TeamMembers" className="hover:text-blue-600">Team Members</Link>
           <a href="#mpc" className="hover:text-blue-600">MPC</a>
           <a href="#explorer" className="hover:text-blue-600">Explorer</a>
-          <a href="#outworks" className="hover:text-blue-600">Outworks</a>
+          <Link to="/ourworks" className="hover:text-blue-600">Ourworks</Link>
           <a href="#outreach" className="hover:text-blue-600">Outreach</a>
           <a href="#contact" className="hover:text-blue-600">Contact</a>
           {/* 
