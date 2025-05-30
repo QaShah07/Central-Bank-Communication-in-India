@@ -1,45 +1,64 @@
-# backend/contact/google_sheets.py
-
 import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from django.utils import timezone
 from .models import ContactSubmission
 
-# 1. Create the scope and credentials for the service account JSON:
-SCOPES = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+# 1) Scopes for Google Sheets/Drive
+SCOPES = [
+    "https://spreadsheets.google.com/feeds",
+    "https://www.googleapis.com/auth/drive"
+]
 
-# Path to your service account JSON file (downloaded from GCP Console)
-# Put this JSON in a secure location, e.g. backend/credentials/google_service.json
+# 2) Path to service account JSON (place your JSON under backend/credentials/google_service.json)
 SERVICE_ACCOUNT_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    '../credentials/google_service.json'
+    "../credentials/google_service.json"
 )
 
-# The ID of your Google Sheet (found in the sheet’s URL)
-# e.g. https://docs.google.com/spreadsheets/d/<<THIS_ID>>/edit#gid=0
-SHEET_ID = os.environ.get('GOOGLE_SHEET_ID', 'YOUR_SHEET_ID_HERE')
+# 3) Your Google Sheet ID
+SHEET_ID = os.environ.get("GOOGLE_SHEET_ID", "YOUR_SHEET_ID_HERE")
 
 def append_submission_to_sheet(submission: ContactSubmission) -> None:
     """
-    Given a ContactSubmission instance, append a row to the Google Sheet.
+    Append a new row to the Google Sheet for this submission.
+    The columns in the sheet should be in this order:
+      [Timestamp, Name, Email, User Type, Extra Info, Purpose, Comment]
+    Where Extra Info is:
+      * Institution Name (if student)
+      * Organization Name (if professional)
+      * Other Description (if other)
     """
-    # 2. Authenticate with gspread
-    creds = ServiceAccountCredentials.from_json_keyfile_name(
-        SERVICE_ACCOUNT_FILE, SCOPES
-    )
-    client = gspread.authorize(creds)
+    try:
+        creds = ServiceAccountCredentials.from_json_keyfile_name(
+            SERVICE_ACCOUNT_FILE, SCOPES
+        )
+        client = gspread.authorize(creds)
+        sheet = client.open_by_key(SHEET_ID).sheet1
 
-    # 3. Open the sheet by ID
-    sheet = client.open_by_key(SHEET_ID).sheet1  # assuming you want the first worksheet
+        timestamp = timezone.localtime(submission.submitted_on).strftime("%Y-%m-%d %H:%M:%S")
 
-    # 4. Prepare the row data (match the column order in your sheet)
-    row = [
-        submission.submitted_on.strftime('%Y-%m-%d %H:%M:%S'),
-        submission.name,
-        submission.institute_name,
-        submission.email,
-        dict(submission.PURPOSE_CHOICES).get(submission.purpose_of_contact, ''),
-    ]
+        # Determine Extra Info column based on user_type
+        if submission.user_type == "student":
+            extra_info = submission.institution_name
+        elif submission.user_type == "professional":
+            extra_info = submission.organization_name
+        else:  # "other"
+            extra_info = submission.other_description
 
-    # 5. Append the row at the bottom
-    sheet.append_row(row, value_input_option='USER_ENTERED')
+        row = [
+            timestamp,
+            submission.name,
+            submission.email,
+            submission.get_user_type_display(),  # "Student"/"Professional"/"Other"
+            extra_info,
+            submission.get_purpose_of_contact_display(),
+            submission.comment,
+        ]
+
+        sheet.append_row(row, value_input_option="USER_ENTERED")
+
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Google Sheets append failed: {e}")
