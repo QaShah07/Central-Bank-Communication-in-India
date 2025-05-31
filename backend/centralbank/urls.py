@@ -15,7 +15,7 @@ urlpatterns = [
     path('api/explorer/', include('explorer.urls')),
     path('api/ourworks/', include('ourworks.urls')),
     path('api/outreach/', include('outreach.urls')),
-    path('api/contact/', include('contact.urls')),
+    path("api/contact/", include("contact.urls")),
     # for handling issue
     # re_path(r'^.*', TemplateView.as_view(template_name="index.html")),
 ]
