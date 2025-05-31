@@ -1,92 +1,47 @@
-import React, { useState } from "react";
+// frontend/src/pages/OurWorks.tsx
+
+import React, { useState, useEffect } from "react";
 import DownloadModal from "../components/DownloadModal";
+import api from "../services/api";
 
 type ResourceItem = {
-  category: string;
+  id: number;
   title: string;
   description: string;
-  imageUrl: string;
-  resourceSlug: string;
-  downloadUrl: string;
+  category: "paper" | "dataset" | "code";
+  slug: string;
+  thumbnail_url: string | null;
+  file_url: string | null;
+  external_url: string | null;
 };
 
-const researchPapers: ResourceItem[] = [
-  {
-    category: "Working Paper",
-    title: "The Impact of Monetary Policy on Inflation in India",
-    description:
-      "A comprehensive analysis of the relationship between monetary policy decisions and inflation rates in India, covering the period from 2010 to 2023.",
-    imageUrl: "/assets/images/paper1.jpg", // replace with actual image path
-    resourceSlug: "impact-monetary-policy-inflation",
-    downloadUrl: "/downloads/impact_monetary_policy.pdf",
-  },
-  {
-    category: "Discussion Paper",
-    title: "Monetary Policy Transmission Mechanism in India",
-    description:
-      "An examination of how monetary policy changes affect the real economy in India, focusing on the role of banks, financial markets, and consumer behavior.",
-    imageUrl: "/assets/images/paper2.jpg",
-    resourceSlug: "monetary-policy-transmission",
-    downloadUrl: "/downloads/monetary_transmission_mechanism.pdf",
-  },
-  {
-    category: "Research Article",
-    title: "The Effectiveness of Quantitative Easing in India",
-    description:
-      "An assessment of the impact of quantitative easing measures implemented by the Reserve Bank of India during the COVID-19 pandemic.",
-    imageUrl: "/assets/images/paper3.jpg",
-    resourceSlug: "effectiveness-quantitative-easing",
-    downloadUrl: "/downloads/qe_effectiveness_india.pdf",
-  },
-];
-
-const dataRepos: ResourceItem[] = [
-  {
-    category: "Dataset",
-    title: "Indian Monetary Policy Indicators",
-    description:
-      "A comprehensive dataset of key monetary policy indicators for India, including policy rates, reserve requirements, and liquidity measures.",
-    imageUrl: "/assets/images/dataset1.jpg",
-    resourceSlug: "monetary-policy-indicators",
-    downloadUrl: "/downloads/monetary_policy_indicators.xlsx",
-  },
-  {
-    category: "Dataset",
-    title: "Inflation Data for India",
-    description:
-      "A time series dataset of inflation rates in India, covering various measures such as CPI and WPI.",
-    imageUrl: "/assets/images/dataset2.jpg",
-    resourceSlug: "inflation-data-india",
-    downloadUrl: "/downloads/inflation_data_india.csv",
-  },
-  {
-    category: "Code Repository",
-    title: "Monetary Policy Analysis Code",
-    description:
-      "A repository of code and scripts used for analyzing monetary policy in India, including implementations of various econometric models.",
-    imageUrl: "/assets/images/code1.jpg",
-    resourceSlug: "monetary-policy-analysis-code",
-    downloadUrl: "https://github.com/your-repo/monetary-policy-analysis", // external URL
-  },
-];
-
 const OurWorks: React.FC = () => {
-  // Track modal state
+  // 1. State for all resources fetched from backend
+  const [resources, setResources] = useState<ResourceItem[]>([]);
+  // 2. Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<
-    (ResourceItem & { resourceType: "paper" | "dataset" | "code" }) | null
-  >(null);
+  const [selectedItem, setSelectedItem] = useState<ResourceItem | null>(null);
 
-  // Open modal with the selected item
-  const openModal = (
-    item: ResourceItem,
-    type: "paper" | "dataset" | "code"
-  ) => {
-    setSelectedItem({ ...item, resourceType: type });
+  // 3. Fetch resources on first render
+  useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        const response = await api.get<ResourceItem[]>("/resources/");
+        setResources(response.data);
+      } catch (err) {
+        console.error("Failed to load resources", err);
+      }
+    };
+    fetchResources();
+  }, []);
+
+  // 4. Open modal for a given resource
+  const openModal = (item: ResourceItem) => {
+    setSelectedItem(item);
     setIsModalOpen(true);
   };
 
-  // Close modal
+  // 5. Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
@@ -94,102 +49,65 @@ const OurWorks: React.FC = () => {
 
   return (
     <div className="container mx-auto px-6 py-12">
-      {/* Research Papers Section */}
-      <h1 className="text-4xl font-bold mb-6">Research Papers</h1>
+      <h1 className="text-4xl font-bold mb-6">Our Works</h1>
 
-      {/* (Optional) Search Bar Stub */}
-      <div className="mb-8">
-        <input
-          type="text"
-          placeholder="Search papers by title, author, or keywords"
-          className="w-full px-4 py-3 bg-gray-100 placeholder-gray-500 rounded-xl focus:outline-none"
-        />
-      </div>
+      {/* Optionally, a search bar or filter could go here */}
 
-      <div className="space-y-12">
-        {researchPapers.map((paper) => (
+      <div className="grid grid-cols-1 gap-12">
+        {resources.map((item) => (
           <div
-            key={paper.resourceSlug}
-            className="flex flex-col md:flex-row items-center"
+            key={item.slug}
+            className="flex flex-col md:flex-row items-start bg-white rounded-xl shadow-md overflow-hidden"
           >
-            {/* Text Area */}
-            <div className="md:w-2/3 md:pr-6">
+            {/* Thumbnail/Image */}
+            <div className="md:w-1/3 w-full">
+              {item.thumbnail_url ? (
+                <img
+                  src={item.thumbnail_url}
+                  alt={item.title}
+                  className="w-full h-auto object-cover"
+                />
+              ) : (
+                <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500">No Image</span>
+                </div>
+              )}
+            </div>
+
+            {/* Text Section */}
+            <div className="md:w-2/3 w-full p-6">
               <p className="text-sm uppercase text-gray-500 mb-1">
-                {paper.category}
+                {item.category === "paper"
+                  ? "Research Paper"
+                  : item.category === "dataset"
+                  ? "Dataset"
+                  : "Code Repository"}
               </p>
               <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                {paper.title}
+                {item.title}
               </h2>
-              <p className="text-gray-600 mb-4">{paper.description}</p>
+              <p className="text-gray-600 mb-4">{item.description}</p>
               <button
-                onClick={() => openModal(paper, "paper")}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full"
+                onClick={() => openModal(item)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full"
               >
                 Submit & Download
               </button>
-            </div>
-            {/* Image Area */}
-            <div className="md:w-1/3 mt-6 md:mt-0">
-              <img
-                src={paper.imageUrl}
-                alt={paper.title}
-                className="w-full h-auto rounded-lg shadow-md"
-              />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Data Repository Section */}
-      <div className="mt-16 space-y-12">
-        <h1 className="text-4xl font-bold mb-6">Data Repository</h1>
-        {dataRepos.map((data) => (
-          <div
-            key={data.resourceSlug}
-            className="flex flex-col md:flex-row items-center"
-          >
-            {/* Text Area */}
-            <div className="md:w-2/3 md:pr-6">
-              <p className="text-sm uppercase text-gray-500 mb-1">
-                {data.category}
-              </p>
-              <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                {data.title}
-              </h2>
-              <p className="text-gray-600 mb-4">{data.description}</p>
-              <button
-                onClick={() =>
-                  openModal(
-                    data,
-                    data.category === "Code Repository" ? "code" : "dataset"
-                  )
-                }
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full"
-              >
-                Submit & Download
-              </button>
-            </div>
-            {/* Image Area */}
-            <div className="md:w-1/3 mt-6 md:mt-0">
-              <img
-                src={data.imageUrl}
-                alt={data.title}
-                className="w-full h-auto rounded-lg shadow-md"
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Download Modal */}
+      {/* 6. Download Modal */}
       {selectedItem && (
         <DownloadModal
           isOpen={isModalOpen}
           onClose={closeModal}
-          resourceType={selectedItem.resourceType}
-          resourceSlug={selectedItem.resourceSlug}
+          resourceType={selectedItem.category}
+          resourceSlug={selectedItem.slug}
           resourceName={selectedItem.title}
-          downloadUrl={selectedItem.downloadUrl}
+          // Choose file_url if it exists, otherwise external_url
+          downloadUrl={selectedItem.file_url || selectedItem.external_url || ""}
         />
       )}
     </div>
