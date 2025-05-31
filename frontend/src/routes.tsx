@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 // Top‐level pages
 // import HomePage from "./pages/HomePage";
 import TeamMembers from "./pages/TeamMembers";
-// import OurWorks from "./pages/OurWorks";
+import OurWorks from "./pages/OurWorks";
 // import Outreach from "./pages/Outreach";
 import ContactForm from "./pages/ContactForm";
 
@@ -57,8 +57,8 @@ const AppRoutes: React.FC = () => {
         </Route> */}
 
         {/* Other single‐page routes */}
-        {/* <Route path="/ourworks" element={<OurWorks />} />
-        <Route path="/outreach" element={<Outreach />} /> */}
+        <Route path="/ourworks" element={<OurWorks />} />
+        {/* <Route path="/outreach" element={<Outreach />} /> */}
         <Route path="/contact" element={<ContactForm />} />
 
         {/* Fallback */}

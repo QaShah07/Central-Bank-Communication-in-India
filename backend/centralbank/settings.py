@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     'ourworks',
     'outreach',
     'contact',
+    # Add the new downloads app here:
+    'downloads',
+    'resources',
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
