@@ -33,7 +33,7 @@ const AppRoutes: React.FC = () => {
       <Routes>
         {/* Home */}
         {/* <Route path="/" element={<HomePage />} /> */}
-        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
 
         {/* Team Members */}
         <Route path="/team" element={<TeamMembers />} />
