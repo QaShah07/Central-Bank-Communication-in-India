@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 // import HomePage from "./pages/HomePage";
 import TeamMembers from "./pages/TeamMembers";
 import OurWorks from "./pages/OurWorks";
+import LandingPage from "./pages/LandingPage";
 // import Outreach from "./pages/Outreach";
 import ContactForm from "./pages/ContactForm";
 
@@ -32,6 +33,7 @@ const AppRoutes: React.FC = () => {
       <Routes>
         {/* Home */}
         {/* <Route path="/" element={<HomePage />} /> */}
+        <Route path="/landing" element={<LandingPage />} />
 
         {/* Team Members */}
         <Route path="/team" element={<TeamMembers />} />
