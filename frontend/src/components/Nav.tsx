@@ -14,7 +14,7 @@ const Nav: React.FC = () => {
           <a href="#mpc" className="hover:text-blue-600">MPC</a>
           <a href="#explorer" className="hover:text-blue-600">Explorer</a>
           <Link to="/ourworks" className="hover:text-blue-600">Ourworks</Link>
-          <a href="#outreach" className="hover:text-blue-600">Outreach</a>
+          <Link to="/outreach" className="hover:text-blue-600">Outreach</Link>
           <Link to="/contact" className="hover:text-blue-600">Contact</Link>
           {/* 
           <button className="hover:text-blue-600">
