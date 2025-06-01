@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // 1. Define the type for a single update item
 type UpdateItem = {
@@ -51,8 +52,18 @@ const allUpdates: AllUpdates = {
 };
 
 const LatestUpdates: React.FC = () => {
-  // 3. Type the state
   const [activeTab, setActiveTab] = useState<TabKey>('Publications');
+  const navigate = useNavigate();
+
+  const handleTabClick = (tab: TabKey, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (tab === 'Blogs' || tab === 'Podcasts') {
+      // Navigate to outreach page with the selected section as a hash
+      navigate(`/outreach#${tab.toLowerCase()}`);
+    } else {
+      setActiveTab(tab);
+    }
+  };
 
   return (
     <div className="bg-white py-16">
@@ -62,12 +73,12 @@ const LatestUpdates: React.FC = () => {
           {(Object.keys(allUpdates) as TabKey[]).map((tab) => (
             <button
               key={tab}
+              onClick={(e) => handleTabClick(tab, e)}
               className={`pb-2 font-semibold ${
                 activeTab === tab
                   ? 'text-blue-600 border-b-2 border-blue-600'
                   : 'text-gray-600 hover:text-blue-600'
               }`}
-              onClick={() => setActiveTab(tab)}
             >
               {tab}
             </button>
@@ -77,7 +88,7 @@ const LatestUpdates: React.FC = () => {
           {allUpdates[activeTab].map((update, index) => (
             <div
               key={index}
-              className="flex items-start gap-6 cursor-pointer hover:bg-gray-50 p-4 rounded-lg transition-colors"
+              className="flex items-start gap-6 p-4 rounded-lg transition-colors hover:bg-gray-50"
             >
               <div className="flex-1">
                 <span className="text-sm text-gray-600">{activeTab.slice(0, -1)}</span>
