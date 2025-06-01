@@ -1,11 +1,10 @@
 # backend/outreach/urls.py
-from rest_framework.routers import DefaultRouter
-from django.urls import include, path
-from .views import OutreachProgramViewSet
 
-router = DefaultRouter()
-router.register(r'', OutreachProgramViewSet)  # /api/outreach/
+from django.urls import path
+from .views import PodcastListAPIView, BlogPostListAPIView, CommentListCreateAPIView
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("podcasts/", PodcastListAPIView.as_view(), name="podcast-list"),
+    path("blogs/", BlogPostListAPIView.as_view(), name="blogpost-list"),
+    path("comments/", CommentListCreateAPIView.as_view(), name="comment-list-create"),
 ]
