@@ -14,32 +14,32 @@ const MPCPage: React.FC = () => {
     {
       title: "Formation and Evolution",
       image: "https://images.pexels.com/photos/7567434/pexels-photo-7567434.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/formation"
+      path: "/landing"
     },
     {
       title: "MPC Decisions",
       image: "https://images.pexels.com/photos/7567440/pexels-photo-7567440.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/decisions"
+      path: "/landing"
     },
     {
       title: "MPC Members",
       image: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/members"
+      path: "/landing"
     },
     {
       title: "MPC Members Voting Pattern",
       image: "https://images.pexels.com/photos/7567476/pexels-photo-7567476.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/voting"
+      path: "/landing"
     },
     {
       title: "MPC Discussions and Macroeconomic Variables",
       image: "https://images.pexels.com/photos/7567455/pexels-photo-7567455.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/discussions"
+      path: "/landing"
     },
     {
       title: "Word Cloud",
       image: "https://images.pexels.com/photos/7567469/pexels-photo-7567469.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/wordcloud"
+      path: "*"
     }
   ];
 
