@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'downloads',
     'resources',
     'mpcDecision',
+    'mpcVoting',
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",

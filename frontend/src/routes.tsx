@@ -19,6 +19,8 @@ import MPCMembers from "./pages/MPC/MPCMembers";
 import MPCPage from "./pages/MPC/MPCPage";
 import MPCFormation from "./pages/MPC/MPCFormation";
 import MpcDecisions from "./pages/MPC/MpcDecisions";
+import MpcVoting from "./pages/MPC/MpcVoting";
+
 // import MPCCorrelation from "./pages/MPC/MPCCorrelation";
 // import MPCVotingPattern from "./pages/MPC/MPCVotingPattern";
 
@@ -51,6 +53,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/member" element={<MPCMembers />} />
           <Route path="formation" element={<MPCFormation />} />
           <Route path="/mpc-decisions" element={<MpcDecisions />} />
+          <Route path="/mpc-voting" element={<MpcVoting />} />
         {/* Explorer Section */}
         {/* <Route path="/explorer" element={<ExplorerOverview />}>
           <Route path="sentiment-overtime" element={<SentimentOvertime />} />
