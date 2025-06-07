@@ -18,6 +18,7 @@ urlpatterns = [
     path("api/contact/", include("contact.urls")),
     path("api/downloads/", include("downloads.urls")),
     path("api/resources/", include("resources.urls")),
+    path("api/mpc/", include("mpcDecision.urls")),
     # for handling issue
     # re_path(r'^.*', TemplateView.as_view(template_name="index.html")),
 ]

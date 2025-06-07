@@ -20,7 +20,7 @@ const MPCPage: React.FC = () => {
     {
       title: "MPC Decisions",
       image: "https://images.pexels.com/photos/7567440/pexels-photo-7567440.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/landing"
+      path: "/mpc-decisions"
     },
     {
       title: "MPC Members",

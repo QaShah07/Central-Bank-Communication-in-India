@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # Add the new downloads app here:
     'downloads',
     'resources',
+    'mpcDecision',
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
