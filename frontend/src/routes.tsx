@@ -11,6 +11,8 @@ import LandingPage from "./pages/LandingPage";
 import Outreach from "./pages/Outreach";
 import ContactForm from "./pages/ContactForm";
 import MPCPage from "./pages/MPCPage"
+import MPCMembers from "./pages/MPCMembers";
+import MPCFormation from "./pages/MPCFormation";
 
 // // MPC subpages
 // import MPCOverview from "./pages/MPC/MPCOverview";
@@ -39,8 +41,10 @@ const AppRoutes: React.FC = () => {
         {/* Team Members */}
         <Route path="/team" element={<TeamMembers />} />
         <Route path="/mpcpage" element={<MPCPage />} />
+        <Route path="/mpcmembers" element={<MPCMembers />} />
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/OurWorks" element={<OurWorks />} />
+        <Route path="/mpcformation" element={<MPCFormation />} />
 
 
         {/* MPC Section */}

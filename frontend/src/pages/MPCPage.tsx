@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+// import MPCMembers from "./Pages"
 
 interface MPCCard {
   title: string;
@@ -14,7 +15,7 @@ const MPCPage: React.FC = () => {
     {
       title: "Formation and Evolution",
       image: "https://images.pexels.com/photos/7567434/pexels-photo-7567434.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/landing"
+      path: "/mpcformation"
     },
     {
       title: "MPC Decisions",
@@ -24,7 +25,7 @@ const MPCPage: React.FC = () => {
     {
       title: "MPC Members",
       image: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/landing"
+      path: "/mpcmembers"
     },
     {
       title: "MPC Members Voting Pattern",
