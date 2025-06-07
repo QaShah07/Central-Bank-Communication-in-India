@@ -16,8 +16,8 @@ const Footer: React.FC = () => {
             <ul className="space-y-2 text-gray-400">
               <li><a href="#tools" className="hover:text-white transition-colors">Interactive Tools</a></li>
               <li><a href="#publications" className="hover:text-white transition-colors">Publications</a></li>
-              <li><a href="#blogs" className="hover:text-white transition-colors">Blogs</a></li>
-              <li><a href="#podcasts" className="hover:text-white transition-colors">Podcasts</a></li>
+              <li><a href="/outreach" className="hover:text-white transition-colors">Blogs</a></li>
+              <li><a href="/outreach" className="hover:text-white transition-colors">Podcasts</a></li>
             </ul>
           </div>
           <div>
@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
               <li><a href="#data" className="hover:text-white transition-colors">Data</a></li>
               <li><a href="#methodology" className="hover:text-white transition-colors">Methodology</a></li>
               <li><a href="#research" className="hover:text-white transition-colors">Research</a></li>
-              <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="/contact" className="hover:text-white transition-colors">Contact Us</a></li>
             </ul>
           </div>
           <div>
