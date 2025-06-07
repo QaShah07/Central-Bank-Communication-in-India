@@ -11,7 +11,7 @@ const Nav: React.FC = () => {
         </div>
         <div className="flex items-center space-x-6">
           <Link to="/team" className="hover:text-blue-600">Team Members</Link>
-          <a href="#mpc" className="hover:text-blue-600">MPC</a>
+          <Link to="/MPC" className="hover:text-blue-600">MPC</Link>
           <a href="#explorer" className="hover:text-blue-600">Explorer</a>
           <Link to="/ourworks" className="hover:text-blue-600">Ourworks</Link>
           <Link to="/outreach" className="hover:text-blue-600">Outreach</Link>

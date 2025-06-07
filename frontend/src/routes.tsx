@@ -11,12 +11,13 @@ import LandingPage from "./pages/LandingPage";
 import Outreach from "./pages/Outreach";
 import ContactForm from "./pages/ContactForm";
 
-// // MPC subpages
-// import MPCOverview from "./pages/MPC/MPCOverview";
-// import MPCEvaluation from "./pages/MPC/MPCEvaluation";
+
+// MPC subpages
 // import MPCDecision from "./pages/MPC/MPCDecision";
 // import MPCMeetingAnalysis from "./pages/MPC/MPCMeetingAnalysis";
-// import MPCMember from "./pages/MPC/MPCMember";
+import MPCMembers from "./pages/MPC/MPCMembers";
+import MPCPage from "./pages/MPC/MPCPage";
+import MPCFormation from "./pages/MPC/MPCFormation";
 // import MPCCorrelation from "./pages/MPC/MPCCorrelation";
 // import MPCVotingPattern from "./pages/MPC/MPCVotingPattern";
 
@@ -39,16 +40,15 @@ const AppRoutes: React.FC = () => {
         <Route path="/team" element={<TeamMembers />} />
 
         {/* MPC Section */}
-        {/* <Route path="/mpc" element={<MPCOverview />}>
-          <Route path="evaluation" element={<MPCEvaluation />} />
-          <Route path="decision" element={<MPCDecision />} />
-          <Route path="meeting-analysis" element={<MPCMeetingAnalysis />} />
-          <Route path="member" element={<MPCMember />} />
-          <Route path="correlation-graph" element={<MPCCorrelation />} />
-          <Route path="voting-pattern" element={<MPCVotingPattern />} />
+        <Route path="/mpc" element={<MPCPage />}>
+          {/* <Route path="evaluation" element={<MPCEvaluation />} /> */}
+          {/* <Route path="meeting-analysis" element={<MPCMeetingAnalysis />} /> */}
+          {/* <Route path="correlation-graph" element={<MPCCorrelation />} />
+          <Route path="voting-pattern" element={<MPCVotingPattern />} /> */}
           <Route path="" element={<Navigate to="evaluation" replace />} />
-        </Route> */}
-
+        </Route>
+          <Route path="/member" element={<MPCMembers />} />
+          <Route path="formation" element={<MPCFormation />} />
         {/* Explorer Section */}
         {/* <Route path="/explorer" element={<ExplorerOverview />}>
           <Route path="sentiment-overtime" element={<SentimentOvertime />} />
