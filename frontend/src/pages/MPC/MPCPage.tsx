@@ -44,7 +44,7 @@ const MPCPage: React.FC = () => {
       title: "Voting Patterns",
       description: "Examine voting patterns and consensus building within the committee",
       image: "https://images.pexels.com/photos/7567476/pexels-photo-7567476.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      path: "/voting-patterns",
+      path: "/mpc-voting",
       icon: <BarChart3 className="w-6 h-6" />,
       gradient: "from-indigo-600 to-blue-600"
     },
