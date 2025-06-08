@@ -3,10 +3,10 @@ export interface TeamMember {
   name: string;
   role: string;
   photo: string;
-  category: 'research' | 'collaborator';
-  area_of_work?: string;
-  affiliation?: string;
+  area_of_work: string;
+  affiliation: string;
   profileUrl?: string;
+  category: 'research' | 'collaborator';
 }
 
 
