@@ -204,7 +204,7 @@ const MPCDecisions: React.FC = () => {
             <table className="min-w-full">
               <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                 <tr>
-                  {['Date','Policy Change','Voting Pattern','Explicit Dissenter','Implicit Dissenter'].map((head, idx)=>(
+                  {['Date','Policy Change','Voting Pattern','Explicit Dissenter','Sentiment score'].map((head, idx)=>(
                     <th key={idx} onClick={()=>handleSort(head.toLowerCase().replace(/ /g,'_') as SortKey)} className="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                       <div className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
                         {{
@@ -212,7 +212,7 @@ const MPCDecisions: React.FC = () => {
                           'Policy Change':<TrendingUp className="w-4 h-4" />, 
                           'Voting Pattern':<Users className="w-4 h-4" />, 
                           'Explicit Dissenter':<Users className="w-4 h-4" />, 
-                          'Implicit Dissenter':<Brain className="w-4 h-4" />
+                          'Sentiment score':<Brain className="w-4 h-4" />
                         }[head]}
                         <span>{head}</span>
                         {sortKey===head.toLowerCase().replace(/ /g,'_') && (sortDirection==='asc'? <ChevronUp className="w-4 h-4 text-blue-600"/>:<ChevronDown className="w-4 h-4 text-blue-600"/>)}
