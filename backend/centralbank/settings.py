@@ -56,8 +56,9 @@ INSTALLED_APPS = [
     'mpcVoting',
 ]
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # for local testing
+    
     "https://central-bank-communication-in-india.vercel.app",  # ✅ your live frontend
+    "http://localhost:5173",  # for local testing
 ]
 
 MIDDLEWARE = [
@@ -172,3 +173,17 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # STATICFILES_DIRS = [BASE_DIR / "static"]
+CORS_ALLOW_ALL_ORIGINS = False  # If true, disables CORS_ALLOWED_ORIGINS
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
