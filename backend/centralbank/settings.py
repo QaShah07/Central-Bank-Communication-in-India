@@ -56,9 +56,10 @@ INSTALLED_APPS = [
     'mpcVoting',
 ]
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    # add your deployed domain later
+    "http://localhost:5173",  # for local testing
+    "https://central-bank-communication-in-india.vercel.app",  # ✅ your live frontend
 ]
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
