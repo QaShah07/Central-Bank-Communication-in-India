@@ -260,7 +260,7 @@ const MpcVoting: React.FC = () => {
             </div>
             {selectedMember && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="relative">
+                <div>
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
                       <Pie
@@ -279,15 +279,6 @@ const MpcVoting: React.FC = () => {
                       <Tooltip />
                     </PieChart>
                   </ResponsiveContainer>
-                  {/* Tenure display in center of pie chart */}
-                  {selectedMember.tenure && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="text-center bg-white bg-opacity-90 rounded-lg p-2 shadow-sm">
-                        <div className="text-xs text-gray-500 font-medium">Tenure</div>
-                        <div className="text-xs text-gray-700 font-semibold">{selectedMember.tenure}</div>
-                      </div>
-                    </div>
-                  )}
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
