@@ -3,12 +3,12 @@ from .models import MemberVoting, DissentYear
 
 @admin.register(MemberVoting)
 class MemberVotingAdmin(admin.ModelAdmin):
-    list_display = ("name", "hikes", "cuts", "holds", "total_votes")
-    search_fields = ("name",)
+    list_display = ("name", "tenure", "hikes", "cuts", "holds", "total_votes")
+    search_fields = ("name", "tenure")
     ordering = ("name",)
     
     # Explicitly define which fields to show in the form
-    fields = ("name", "hikes", "cuts", "holds")
+    fields = ("name", "tenure", "hikes", "cuts", "holds")
     
     # Make total_votes read-only since it's a property
     readonly_fields = ()

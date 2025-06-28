@@ -22,12 +22,15 @@ import {
   Activity,
   ArrowUp,
   ArrowDown,
-  Minus
+  Minus,
+  Calendar,
+  Clock
 } from "lucide-react";
 
 interface MemberVoting {
   id: number;
   name: string;
+  tenure?: string;
   hikes: number;
   cuts: number;
   holds: number;
@@ -230,6 +233,12 @@ const MpcVoting: React.FC = () => {
                 >
                   <div className="font-semibold">{member.name}</div>
                   <div className="text-sm text-gray-600">{member.total_votes} total votes</div>
+                  {member.tenure && (
+                    <div className="text-xs text-gray-500 mt-1 flex items-center">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {member.tenure}
+                    </div>
+                  )}
                 </button>
               ))}
             </div>
@@ -237,12 +246,21 @@ const MpcVoting: React.FC = () => {
 
           {/* Member Voting Distribution */}
           <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">
-              {selectedMember ? `${selectedMember.name}'s Voting Pattern` : 'Select a Member'}
-            </h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-900">
+                {selectedMember ? `${selectedMember.name}'s Voting Pattern` : 'Select a Member'}
+              </h3>
+              {selectedMember?.tenure && (
+                <div className="flex items-center text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  <span className="font-medium">Tenure:</span>
+                  <span className="ml-1">{selectedMember.tenure}</span>
+                </div>
+              )}
+            </div>
             {selectedMember && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
+                <div className="relative">
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
                       <Pie
@@ -261,6 +279,15 @@ const MpcVoting: React.FC = () => {
                       <Tooltip />
                     </PieChart>
                   </ResponsiveContainer>
+                  {/* Tenure display in center of pie chart */}
+                  {selectedMember.tenure && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="text-center bg-white bg-opacity-90 rounded-lg p-2 shadow-sm">
+                        <div className="text-xs text-gray-500 font-medium">Tenure</div>
+                        <div className="text-xs text-gray-700 font-semibold">{selectedMember.tenure}</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
@@ -301,6 +328,7 @@ const MpcVoting: React.FC = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Member</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Tenure</th>
                   <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
                     <div className="flex items-center justify-center">
                       <ArrowUp className="w-4 h-4 text-red-600 mr-1" />
@@ -336,6 +364,15 @@ const MpcVoting: React.FC = () => {
                           <div className="text-sm text-gray-500">MPC Member</div>
                         </div>
                       </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {member.tenure ? (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {member.tenure}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400 text-sm">-</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">

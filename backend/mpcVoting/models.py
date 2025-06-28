@@ -9,6 +9,12 @@ class MemberVoting(models.Model):
     hikes = models.PositiveIntegerField(default=0)
     cuts = models.PositiveIntegerField(default=0)
     holds = models.PositiveIntegerField(default=0)
+    tenure = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True,
+        help_text="Member's tenure period (e.g., 'Oct 2020 - Oct 2024')"
+    )
 
     @property
     def total_votes(self):

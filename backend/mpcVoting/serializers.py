@@ -9,6 +9,7 @@ class MemberVotingSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
+            "tenure",
             "hikes",
             "cuts",
             "holds",
