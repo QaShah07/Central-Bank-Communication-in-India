@@ -17,7 +17,7 @@ const MPCMembers: React.FC = () => {
       icon: Building2,
       expertise: ["Finance and Taxation"],
       years: "33 years of experience",
-      tenure: "Tenure: 11th December 2024 to Present )"
+      tenure: "Tenure: 11th December 2024 to Present"
     },
     {
       name: "Poonam Gupta",
@@ -73,6 +73,7 @@ const MPCMembers: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Header */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-indigo-600/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -91,6 +92,7 @@ const MPCMembers: React.FC = () => {
         </div>
       </div>
 
+      {/* Members Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {members.map((member, index) => {
@@ -98,7 +100,6 @@ const MPCMembers: React.FC = () => {
             return (
               <div key={index} className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full -translate-y-16 translate-x-16 opacity-50 group-hover:scale-150 transition-transform duration-700"></div>
-
                 <div className="relative p-8">
                   <div className="flex items-start gap-6 mb-6">
                     <div className="relative">
@@ -109,7 +110,6 @@ const MPCMembers: React.FC = () => {
                         <IconComponent className="w-4 h-4 text-white" />
                       </div>
                     </div>
-
                     <div className="flex-1">
                       <h3 className="text-2xl font-bold text-gray-900 mb-1">{member.name}</h3>
                       <p className="text-blue-600 font-semibold mb-1">{member.title}</p>
@@ -120,11 +120,9 @@ const MPCMembers: React.FC = () => {
                       </div>
                     </div>
                   </div>
-
                   <p className="text-gray-700 leading-relaxed mb-6 text-sm">
                     {member.description}
                   </p>
-
                   <div className="space-y-3">
                     <h4 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
                       Key Expertise
@@ -138,21 +136,20 @@ const MPCMembers: React.FC = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               </div>
             );
           })}
         </div>
 
+        {/* Committee Overview */}
         <div className="mt-20 bg-white rounded-3xl shadow-xl p-8 lg:p-12">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Committee Overview</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Our diverse committee brings together expertise from various domains to ensure comprehensive monetary policy decisions.
+              The Monetary Policy Committee consists of six highly accomplished individuals, bringing a collective expertise of over 180 years across economics, public policy, finance, and international development. Each member holds advanced degrees and plays a crucial role in shaping India’s economic future.
             </p>
           </div>
-
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -165,7 +162,7 @@ const MPCMembers: React.FC = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <GraduationCap className="w-8 h-8 text-white" />
               </div>
-              <div className="text-3xl font-bold text-gray-900 mb-1">68+</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">184+</div>
               <div className="text-sm text-gray-600">Years Combined Experience</div>
             </div>
             <div className="text-center">
@@ -179,8 +176,8 @@ const MPCMembers: React.FC = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Building2 className="w-8 h-8 text-white" />
               </div>
-              <div className="text-3xl font-bold text-gray-900 mb-1">3</div>
-              <div className="text-sm text-gray-600">Core Domains</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">5+</div>
+              <div className="text-sm text-gray-600">Key Policy Domains</div>
             </div>
           </div>
         </div>
