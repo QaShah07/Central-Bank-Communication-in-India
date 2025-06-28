@@ -24,7 +24,8 @@ import {
   ArrowDown,
   Minus,
   Calendar,
-  Clock
+  Clock,
+  ChevronDown
 } from "lucide-react";
 
 interface MemberVoting {
@@ -49,6 +50,7 @@ const MpcVoting: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedMember, setSelectedMember] = useState<MemberVoting | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -216,59 +218,104 @@ const MpcVoting: React.FC = () => {
         </div>
 
         {/* Member Voting Analysis */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {/* Member Selection */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Select Member</h3>
-            <div className="space-y-3">
-              {members.map((member) => (
-                <button
-                  key={member.id}
-                  onClick={() => setSelectedMember(member)}
-                  className={`w-full text-left p-4 rounded-xl transition-all duration-200 ${
-                    selectedMember?.id === member.id
-                      ? 'bg-blue-50 border-2 border-blue-200 text-blue-900'
-                      : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
-                  }`}
-                >
-                  <div className="font-semibold">{member.name}</div>
-                  <div className="text-sm text-gray-600">{member.total_votes} total votes</div>
-                  {member.tenure && (
-                    <div className="text-xs text-gray-500 mt-1 flex items-center">
-                      <Clock className="w-3 h-3 mr-1" />
-                      {member.tenure}
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 mb-12">
+          {/* Member Selection Dropdown */}
+          <div className="mb-8">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Select MPC Member
+            </label>
+            <div className="relative">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="w-full max-w-md bg-white border border-gray-300 rounded-xl px-4 py-3 text-left shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                      {selectedMember ? selectedMember.name.split(' ').map(n => n[0]).join('').slice(0, 2) : '?'}
                     </div>
-                  )}
-                </button>
-              ))}
+                    <div>
+                      <div className="font-semibold text-gray-900">
+                        {selectedMember ? selectedMember.name : 'Select a member'}
+                      </div>
+                      {selectedMember && (
+                        <div className="text-sm text-gray-500">
+                          {selectedMember.total_votes} total votes
+                          {selectedMember.tenure && (
+                            <span className="ml-2">• {selectedMember.tenure}</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                </div>
+              </button>
+
+              {/* Dropdown Menu */}
+              {isDropdownOpen && (
+                <div className="absolute z-10 w-full max-w-md mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-64 overflow-y-auto">
+                  {members.map((member) => (
+                    <button
+                      key={member.id}
+                      onClick={() => {
+                        setSelectedMember(member);
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`w-full text-left p-4 hover:bg-gray-50 transition-colors duration-200 first:rounded-t-xl last:rounded-b-xl ${
+                        selectedMember?.id === member.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-3 text-sm">
+                          {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900">{member.name}</div>
+                          <div className="text-sm text-gray-500">
+                            {member.total_votes} total votes
+                            {member.tenure && (
+                              <span className="ml-2 flex items-center">
+                                <Clock className="w-3 h-3 mr-1" />
+                                {member.tenure}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Member Voting Distribution */}
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900">
-                {selectedMember ? `${selectedMember.name}'s Voting Pattern` : 'Select a Member'}
-              </h3>
-              {selectedMember?.tenure && (
-                <div className="flex items-center text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  <span className="font-medium">Tenure:</span>
-                  <span className="ml-1">{selectedMember.tenure}</span>
-                </div>
-              )}
-            </div>
-            {selectedMember && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {selectedMember && (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-gray-900">
+                  {selectedMember.name}'s Voting Pattern
+                </h3>
+                {selectedMember.tenure && (
+                  <div className="flex items-center text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    <span className="font-medium">Tenure:</span>
+                    <span className="ml-1">{selectedMember.tenure}</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
-                  <ResponsiveContainer width="100%" height={200}>
+                  <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
                         data={pieData}
                         cx="50%"
                         cy="50%"
-                        innerRadius={40}
-                        outerRadius={80}
+                        innerRadius={60}
+                        outerRadius={120}
                         paddingAngle={5}
                         dataKey="value"
                       >
@@ -281,31 +328,31 @@ const MpcVoting: React.FC = () => {
                   </ResponsiveContainer>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg">
                     <div className="flex items-center">
-                      <ArrowUp className="w-5 h-5 text-red-600 mr-2" />
+                      <ArrowUp className="w-5 h-5 text-red-600 mr-3" />
                       <span className="font-medium text-red-900">Rate Hikes</span>
                     </div>
                     <span className="text-2xl font-bold text-red-600">{selectedMember.hikes}</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
                     <div className="flex items-center">
-                      <ArrowDown className="w-5 h-5 text-green-600 mr-2" />
+                      <ArrowDown className="w-5 h-5 text-green-600 mr-3" />
                       <span className="font-medium text-green-900">Rate Cuts</span>
                     </div>
                     <span className="text-2xl font-bold text-green-600">{selectedMember.cuts}</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div className="flex items-center">
-                      <Minus className="w-5 h-5 text-gray-600 mr-2" />
+                      <Minus className="w-5 h-5 text-gray-600 mr-3" />
                       <span className="font-medium text-gray-900">Rate Holds</span>
                     </div>
                     <span className="text-2xl font-bold text-gray-600">{selectedMember.holds}</span>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Comprehensive Member Table */}
@@ -548,3 +595,14 @@ const MpcVoting: React.FC = () => {
 };
 
 export default MpcVoting;
+
+// Helper Card component
+const Card: React.FC<{icon: React.ReactNode; label: string; value: number}> = ({icon,label,value}) => (
+  <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-lg flex items-center">
+    <div className="mr-3 text-blue-600">{icon}</div>
+    <div>
+      <p className="text-sm text-gray-500">{label}</p>
+      <p className="text-2xl font-bold text-gray-900">{value}</p>
+    </div>
+  </div>
+);
