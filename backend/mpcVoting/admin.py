@@ -6,10 +6,20 @@ class MemberVotingAdmin(admin.ModelAdmin):
     list_display = ("name", "hikes", "cuts", "holds", "total_votes")
     search_fields = ("name",)
     ordering = ("name",)
+    
+    # Explicitly define which fields to show in the form
+    fields = ("name", "hikes", "cuts", "holds")
+    
+    # Make total_votes read-only since it's a property
+    readonly_fields = ()
+    
+    def total_votes(self, obj):
+        return obj.total_votes
+    total_votes.short_description = "Total Votes"
 
 
 @admin.register(DissentYear)
 class DissentYearAdmin(admin.ModelAdmin):
     list_display = ("year", "explicit_count", "implicit_count")
     ordering = ("-year",)
-    # So you can easily enter or edit each year’s counts
+    fields = ("year", "explicit_count", "implicit_count")

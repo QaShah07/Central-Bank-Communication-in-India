@@ -2,7 +2,7 @@ from django.db import models
 
 class MemberVoting(models.Model):
     """
-    Stores each MPC member’s total Hikes, Cuts, and Holds. 
+    Stores each MPC member's total Hikes, Cuts, and Holds. 
     TotalVotes is computed as hikes + cuts + holds.
     """
     name = models.CharField(max_length=100)
@@ -16,15 +16,17 @@ class MemberVoting(models.Model):
 
     class Meta:
         ordering = ["name"]  # Sort alphabetically by member name
+        verbose_name = "Member Voting Record"
+        verbose_name_plural = "Member Voting Records"
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.total_votes} votes)"
 
 
 class DissentYear(models.Model):
     """
     Stores the yearly counts of explicit and implicit dissent. 
-    We’ll show a bar for each year (e.g. 2019, 2020, 2021, 2022, 2023).
+    We'll show a bar for each year (e.g. 2019, 2020, 2021, 2022, 2023).
     """
     year = models.PositiveIntegerField(unique=True)
     explicit_count = models.PositiveIntegerField(default=0)
@@ -32,6 +34,8 @@ class DissentYear(models.Model):
 
     class Meta:
         ordering = ["year"]  # ascending order: 2019, 2020, …
+        verbose_name = "Dissent Year"
+        verbose_name_plural = "Dissent Years"
 
     def __str__(self):
-        return str(self.year)
+        return f"{self.year} (Explicit: {self.explicit_count}, Implicit: {self.implicit_count})"
