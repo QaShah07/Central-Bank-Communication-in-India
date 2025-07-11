@@ -48,7 +48,7 @@ def available_members(request):
 def correlation_data(request, year, member_type):
     """
     GET /api/mpcDiscussions/correlation/{year}/{member_type}/
-    Returns correlation data for internal/external members by year
+    Returns combined correlation data for internal/external members by year
     """
     try:
         # Filter by year and member type
@@ -93,75 +93,35 @@ def correlation_data(request, year, member_type):
         )
 
 @api_view(['GET'])
-def member_analysis_data(request, year, member_type):
+def member_analysis_data(request, year, member_name):
     """
-    GET /api/mpcDiscussions/member-analysis/{year}/{member_type}/
-    Returns combined analysis data for internal/external members by year
+    GET /api/mpcDiscussions/member-analysis/{year}/{member_name}/
+    Returns analysis data for specific member by year
     """
     try:
-        # Filter by year and member type
+        # Filter by year and member name
         discussions = MPCDiscussion.objects.filter(
             month_year__endswith=str(year),
-            member_type=member_type
+            name=member_name
         ).order_by('month_year')
         
-        # Group by month_year and calculate averages
-        monthly_data = {}
-        for discussion in discussions:
-            month_year = discussion.month_year
-            if month_year not in monthly_data:
-                monthly_data[month_year] = {
-                    'inflation_actual': [],
-                    'inflation_predicted': [],
-                    'inflation_error': [],
-                    'growth_actual': [],
-                    'growth_predicted': [],
-                    'growth_error': [],
-                    'gdp_actual': [],
-                    'gdp_predicted': [],
-                    'gdp_error': []
-                }
-            
-            # Convert string values to float for averaging
-            try:
-                monthly_data[month_year]['inflation_actual'].append(float(discussion.inflation_actual))
-                monthly_data[month_year]['inflation_predicted'].append(float(discussion.inflation_predicted))
-                monthly_data[month_year]['inflation_error'].append(float(discussion.inflation_error))
-                monthly_data[month_year]['growth_actual'].append(float(discussion.growth_actual))
-                monthly_data[month_year]['growth_predicted'].append(float(discussion.growth_predicted))
-                monthly_data[month_year]['growth_error'].append(float(discussion.growth_error))
-                monthly_data[month_year]['gdp_actual'].append(float(discussion.gdp_actual))
-                monthly_data[month_year]['gdp_predicted'].append(float(discussion.gdp_predicted))
-                monthly_data[month_year]['gdp_error'].append(float(discussion.gdp_error))
-            except ValueError:
-                # Skip invalid data
-                continue
-        
-        # Calculate averages and prepare response
+        # Prepare response data
         analysis_data = []
-        for month_year, data in monthly_data.items():
+        for discussion in discussions:
             month = month_year.split()[0]
             
-            # Calculate averages for each metric
-            avg_data = {}
-            for key, values in data.items():
-                if values:
-                    avg_data[key] = round(sum(values) / len(values), 2)
-                else:
-                    avg_data[key] = 0
-            
             analysis_data.append({
-                'month_year': month_year,
+                'month_year': discussion.month_year,
                 'month': month,
-                'inflation_actual': str(avg_data['inflation_actual']),
-                'inflation_predicted': str(avg_data['inflation_predicted']),
-                'inflation_error': str(avg_data['inflation_error']),
-                'growth_actual': str(avg_data['growth_actual']),
-                'growth_predicted': str(avg_data['growth_predicted']),
-                'growth_error': str(avg_data['growth_error']),
-                'gdp_actual': str(avg_data['gdp_actual']),
-                'gdp_predicted': str(avg_data['gdp_predicted']),
-                'gdp_error': str(avg_data['gdp_error']),
+                'inflation_actual': discussion.inflation_actual,
+                'inflation_predicted': discussion.inflation_predicted,
+                'inflation_error': discussion.inflation_error,
+                'growth_actual': discussion.growth_actual,
+                'growth_predicted': discussion.growth_predicted,
+                'growth_error': discussion.growth_error,
+                'gdp_actual': discussion.gdp_actual,
+                'gdp_predicted': discussion.gdp_predicted,
+                'gdp_error': discussion.gdp_error,
             })
         
         # Sort by month order
@@ -175,7 +135,7 @@ def member_analysis_data(request, year, member_type):
         
     except Exception as e:
         return Response(
-            {'error': f'Failed to fetch member type analysis data: {str(e)}'}, 
+            {'error': f'Failed to fetch member analysis data: {str(e)}'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 

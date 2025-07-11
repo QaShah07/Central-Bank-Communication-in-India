@@ -61,11 +61,12 @@ const MPCDiscussions: React.FC = () => {
   
   // State for member analysis
   const [analysisYear, setAnalysisYear] = useState<number | null>(null);
-  const [analysisMemberType, setAnalysisMemberType] = useState<'internal' | 'external'>('internal');
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [memberAnalysisData, setMemberAnalysisData] = useState<MemberAnalysisData[]>([]);
   
   // Common state
   const [availableYears, setAvailableYears] = useState<number[]>([]);
+  const [availableMembers, setAvailableMembers] = useState<Member[]>([]);
   const [statistics, setStatistics] = useState<Statistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,24 +75,29 @@ const MPCDiscussions: React.FC = () => {
   const [isCorrelationYearOpen, setIsCorrelationYearOpen] = useState(false);
   const [isMemberTypeOpen, setIsMemberTypeOpen] = useState(false);
   const [isAnalysisYearOpen, setIsAnalysisYearOpen] = useState(false);
-  const [isAnalysisMemberTypeOpen, setIsAnalysisMemberTypeOpen] = useState(false);
+  const [isMemberOpen, setIsMemberOpen] = useState(false);
 
   // Fetch initial data
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const [yearsResponse, statsResponse] = await Promise.all([
+        const [yearsResponse, membersResponse, statsResponse] = await Promise.all([
           api.get<number[]>('/mpcDiscussions/years/'),
+          api.get<Member[]>('/mpcDiscussions/members/'),
           api.get<Statistics>('/mpcDiscussions/statistics/')
         ]);
 
         setAvailableYears(yearsResponse.data);
+        setAvailableMembers(membersResponse.data);
         setStatistics(statsResponse.data);
 
         // Set default values
         if (yearsResponse.data.length > 0) {
           setCorrelationYear(yearsResponse.data[0]);
           setAnalysisYear(yearsResponse.data[0]);
+        }
+        if (membersResponse.data.length > 0) {
+          setSelectedMember(membersResponse.data[0]);
         }
       } catch (err) {
         console.error('Error fetching initial data:', err);
@@ -113,10 +119,10 @@ const MPCDiscussions: React.FC = () => {
 
   // Fetch member analysis data when year or member changes
   useEffect(() => {
-    if (analysisYear && analysisMemberType) {
-      fetchMemberAnalysisData(analysisYear, analysisMemberType);
+    if (analysisYear && selectedMember) {
+      fetchMemberAnalysisData(analysisYear, selectedMember.name);
     }
-  }, [analysisYear, analysisMemberType]);
+  }, [analysisYear, selectedMember]);
 
   const fetchCorrelationData = async (year: number, type: 'internal' | 'external') => {
     try {
@@ -128,9 +134,9 @@ const MPCDiscussions: React.FC = () => {
     }
   };
 
-  const fetchMemberAnalysisData = async (year: number, memberType: 'internal' | 'external') => {
+  const fetchMemberAnalysisData = async (year: number, memberName: string) => {
     try {
-      const response = await api.get<MemberAnalysisData[]>(`/mpcDiscussions/member-analysis/${year}/${memberType}/`);
+      const response = await api.get<MemberAnalysisData[]>(`/mpcDiscussions/member-analysis/${year}/${memberName}/`);
       setMemberAnalysisData(response.data);
     } catch (err) {
       console.error('Error fetching member analysis data:', err);
@@ -388,7 +394,7 @@ const MPCDiscussions: React.FC = () => {
 
         {/* Member Analysis Section */}
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Combined Member Type Analysis</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Individual Member Analysis</h2>
           
           {/* Member Analysis Controls */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -429,45 +435,57 @@ const MPCDiscussions: React.FC = () => {
               </div>
             </div>
 
-            {/* Member Type Dropdown */}
+            {/* Member Dropdown */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Member Type</label>
+              <label className="block text-sm font-medium text-gray-700 mb-3">Member</label>
               <div className="relative">
                 <button
-                  onClick={() => setIsAnalysisMemberTypeOpen(!isAnalysisMemberTypeOpen)}
+                  onClick={() => setIsMemberOpen(!isMemberOpen)}
                   className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-left shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                 >
                   <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium text-gray-900">
-                        {analysisMemberType === 'internal' ? 'Internal Members (Combined)' : 'External Members (Combined)'}
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                        {selectedMember ? selectedMember.name.split(' ').map(n => n[0]).join('').slice(0, 2) : '?'}
                       </div>
-                      <div className="text-sm text-gray-500">
-                        Average values for all {analysisMemberType} members
+                      <div>
+                        <div className="font-semibold text-gray-900">
+                          {selectedMember ? selectedMember.name : 'Select a member'}
+                        </div>
+                        {selectedMember && (
+                          <div className="text-sm text-gray-500">
+                            {selectedMember.member_type === 'internal' ? 'Internal Member' : 'External Member'}
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isAnalysisMemberTypeOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isMemberOpen ? 'rotate-180' : ''}`} />
                   </div>
                 </button>
 
-                {isAnalysisMemberTypeOpen && (
+                {isMemberOpen && (
                   <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-64 overflow-y-auto">
-                    {['internal', 'external'].map((type) => (
+                    {availableMembers.map((member) => (
                       <button
-                        key={type}
+                        key={member.name}
                         onClick={() => {
-                          setAnalysisMemberType(type as 'internal' | 'external');
-                          setIsAnalysisMemberTypeOpen(false);
+                          setSelectedMember(member);
+                          setIsMemberOpen(false);
                         }}
                         className={`w-full text-left p-4 hover:bg-gray-50 transition-colors duration-200 first:rounded-t-xl last:rounded-b-xl ${
-                          analysisMemberType === type ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+                          selectedMember?.name === member.name ? 'bg-blue-50 border-l-4 border-blue-500' : ''
                         }`}
                       >
-                        <div className="font-medium text-gray-900">
-                          {type === 'internal' ? 'Internal Members (Combined)' : 'External Members (Combined)'}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          Average values for all {type} members
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-3 text-sm">
+                            {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                          </div>
+                          <div>
+                            <div className="font-semibold text-gray-900">{member.name}</div>
+                            <div className="text-sm text-gray-500">
+                              {member.member_type === 'internal' ? 'Internal Member' : 'External Member'}
+                            </div>
+                          </div>
                         </div>
                       </button>
                     ))}
@@ -482,7 +500,7 @@ const MPCDiscussions: React.FC = () => {
             {/* Inflation Chart */}
             <div className="bg-gray-50 rounded-2xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Inflation - {analysisMemberType === 'internal' ? 'Internal' : 'External'} Members
+                Inflation - {selectedMember?.name}
               </h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={prepareMetricData('inflation')}>
@@ -534,7 +552,7 @@ const MPCDiscussions: React.FC = () => {
             {/* Growth Chart */}
             <div className="bg-gray-50 rounded-2xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Growth - {analysisMemberType === 'internal' ? 'Internal' : 'External'} Members
+                Growth - {selectedMember?.name}
               </h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={prepareMetricData('growth')}>
@@ -586,7 +604,7 @@ const MPCDiscussions: React.FC = () => {
             {/* GDP Chart */}
             <div className="bg-gray-50 rounded-2xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                GDP - {analysisMemberType === 'internal' ? 'Internal' : 'External'} Members
+               GDP - {selectedMember?.name}
               </h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={prepareMetricData('gdp')}>
