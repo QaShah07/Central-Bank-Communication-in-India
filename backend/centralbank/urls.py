@@ -21,6 +21,7 @@ urlpatterns = [
     path("api/mpc/", include("mpcDecision.urls")),
     path("api/mpcVoting/", include("mpcVoting.urls")),
     path("api/minutesAnalysis/", include("minutesAnalysis.urls")),
+    path("api/mpcDiscussions/", include("mpcDiscussions.urls")),
     # for handling issue
     # re_path(r'^.*', TemplateView.as_view(template_name="index.html")),
 ]

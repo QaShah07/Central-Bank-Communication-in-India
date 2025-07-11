@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'mpcDecision',
     'mpcVoting',
     'minutesAnalysis',
+    'mpcDiscussions',
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
