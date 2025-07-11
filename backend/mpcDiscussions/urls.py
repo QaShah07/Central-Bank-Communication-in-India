@@ -21,8 +21,8 @@ urlpatterns = [
     # Get correlation data for internal/external members by year
     path('correlation/<int:year>/<str:member_type>/', correlation_data, name='correlation-data'),
     
-    # Get member analysis data by year and member name
-    path('member-analysis/<int:year>/<str:member_name>/', member_analysis_data, name='member-analysis-data'),
+    # Get member analysis data by year and member type
+    path('member-analysis/<int:year>/<str:member_type>/', member_analysis_data, name='member-analysis-data'),
     
     # Get general statistics
     path('statistics/', statistics, name='statistics'),

@@ -61,12 +61,11 @@ const MPCDiscussions: React.FC = () => {
   
   // State for member analysis
   const [analysisYear, setAnalysisYear] = useState<number | null>(null);
-  const [selectedMember, setSelectedMember] = useState<string>('');
+  const [analysisMemberType, setAnalysisMemberType] = useState<'internal' | 'external'>('internal');
   const [memberAnalysisData, setMemberAnalysisData] = useState<MemberAnalysisData[]>([]);
   
   // Common state
   const [availableYears, setAvailableYears] = useState<number[]>([]);
-  const [availableMembers, setAvailableMembers] = useState<Member[]>([]);
   const [statistics, setStatistics] = useState<Statistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -75,29 +74,24 @@ const MPCDiscussions: React.FC = () => {
   const [isCorrelationYearOpen, setIsCorrelationYearOpen] = useState(false);
   const [isMemberTypeOpen, setIsMemberTypeOpen] = useState(false);
   const [isAnalysisYearOpen, setIsAnalysisYearOpen] = useState(false);
-  const [isMemberNameOpen, setIsMemberNameOpen] = useState(false);
+  const [isAnalysisMemberTypeOpen, setIsAnalysisMemberTypeOpen] = useState(false);
 
   // Fetch initial data
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const [yearsResponse, membersResponse, statsResponse] = await Promise.all([
+        const [yearsResponse, statsResponse] = await Promise.all([
           api.get<number[]>('/mpcDiscussions/years/'),
-          api.get<Member[]>('/mpcDiscussions/members/'),
           api.get<Statistics>('/mpcDiscussions/statistics/')
         ]);
 
         setAvailableYears(yearsResponse.data);
-        setAvailableMembers(membersResponse.data);
         setStatistics(statsResponse.data);
 
         // Set default values
         if (yearsResponse.data.length > 0) {
           setCorrelationYear(yearsResponse.data[0]);
           setAnalysisYear(yearsResponse.data[0]);
-        }
-        if (membersResponse.data.length > 0) {
-          setSelectedMember(membersResponse.data[0].name);
         }
       } catch (err) {
         console.error('Error fetching initial data:', err);
@@ -119,10 +113,10 @@ const MPCDiscussions: React.FC = () => {
 
   // Fetch member analysis data when year or member changes
   useEffect(() => {
-    if (analysisYear && selectedMember) {
-      fetchMemberAnalysisData(analysisYear, selectedMember);
+    if (analysisYear && analysisMemberType) {
+      fetchMemberAnalysisData(analysisYear, analysisMemberType);
     }
-  }, [analysisYear, selectedMember]);
+  }, [analysisYear, analysisMemberType]);
 
   const fetchCorrelationData = async (year: number, type: 'internal' | 'external') => {
     try {
@@ -134,9 +128,9 @@ const MPCDiscussions: React.FC = () => {
     }
   };
 
-  const fetchMemberAnalysisData = async (year: number, memberName: string) => {
+  const fetchMemberAnalysisData = async (year: number, memberType: 'internal' | 'external') => {
     try {
-      const response = await api.get<MemberAnalysisData[]>(`/mpcDiscussions/member-analysis/${year}/${encodeURIComponent(memberName)}/`);
+      const response = await api.get<MemberAnalysisData[]>(`/mpcDiscussions/member-analysis/${year}/${memberType}/`);
       setMemberAnalysisData(response.data);
     } catch (err) {
       console.error('Error fetching member analysis data:', err);
@@ -394,7 +388,7 @@ const MPCDiscussions: React.FC = () => {
 
         {/* Member Analysis Section */}
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Member Analysis</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Combined Member Type Analysis</h2>
           
           {/* Member Analysis Controls */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -435,45 +429,45 @@ const MPCDiscussions: React.FC = () => {
               </div>
             </div>
 
-            {/* Member Name Dropdown */}
+            {/* Member Type Dropdown */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Member</label>
+              <label className="block text-sm font-medium text-gray-700 mb-3">Member Type</label>
               <div className="relative">
                 <button
-                  onClick={() => setIsMemberNameOpen(!isMemberNameOpen)}
+                  onClick={() => setIsAnalysisMemberTypeOpen(!isAnalysisMemberTypeOpen)}
                   className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-left shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-gray-900">
-                        {selectedMember || 'Select Member'}
+                        {analysisMemberType === 'internal' ? 'Internal Members (Combined)' : 'External Members (Combined)'}
                       </div>
-                      {selectedMember && (
-                        <div className="text-sm text-gray-500">
-                          {availableMembers.find(m => m.name === selectedMember)?.member_type === 'internal' ? 'Internal' : 'External'} Member
-                        </div>
-                      )}
+                      <div className="text-sm text-gray-500">
+                        Average values for all {analysisMemberType} members
+                      </div>
                     </div>
-                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isMemberNameOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isAnalysisMemberTypeOpen ? 'rotate-180' : ''}`} />
                   </div>
                 </button>
 
-                {isMemberNameOpen && (
+                {isAnalysisMemberTypeOpen && (
                   <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-64 overflow-y-auto">
-                    {availableMembers.map((member) => (
+                    {['internal', 'external'].map((type) => (
                       <button
-                        key={member.name}
+                        key={type}
                         onClick={() => {
-                          setSelectedMember(member.name);
-                          setIsMemberNameOpen(false);
+                          setAnalysisMemberType(type as 'internal' | 'external');
+                          setIsAnalysisMemberTypeOpen(false);
                         }}
                         className={`w-full text-left p-4 hover:bg-gray-50 transition-colors duration-200 first:rounded-t-xl last:rounded-b-xl ${
-                          selectedMember === member.name ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+                          analysisMemberType === type ? 'bg-blue-50 border-l-4 border-blue-500' : ''
                         }`}
                       >
-                        <div className="font-medium text-gray-900">{member.name}</div>
+                        <div className="font-medium text-gray-900">
+                          {type === 'internal' ? 'Internal Members (Combined)' : 'External Members (Combined)'}
+                        </div>
                         <div className="text-sm text-gray-500">
-                          {member.member_type === 'internal' ? 'Internal' : 'External'} Member
+                          Average values for all {type} members
                         </div>
                       </button>
                     ))}
@@ -487,7 +481,9 @@ const MPCDiscussions: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Inflation Chart */}
             <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Inflation</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Inflation - {analysisMemberType === 'internal' ? 'Internal' : 'External'} Members
+              </h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={prepareMetricData('inflation')}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -537,7 +533,9 @@ const MPCDiscussions: React.FC = () => {
 
             {/* Growth Chart */}
             <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Growth</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Growth - {analysisMemberType === 'internal' ? 'Internal' : 'External'} Members
+              </h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={prepareMetricData('growth')}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -587,7 +585,9 @@ const MPCDiscussions: React.FC = () => {
 
             {/* GDP Chart */}
             <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">GDP</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                GDP - {analysisMemberType === 'internal' ? 'Internal' : 'External'} Members
+              </h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={prepareMetricData('gdp')}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
