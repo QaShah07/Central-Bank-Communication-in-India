@@ -6,7 +6,9 @@ import {
   TrendingUp, 
   ChevronDown,
   Activity,
-  Database
+  Database,
+  FileText,
+  MessageSquare
 } from 'lucide-react';
 import {
   LineChart,
@@ -144,22 +146,6 @@ const MPCDiscussions: React.FC = () => {
     }
   };
 
-  // Convert string values to numbers for charting
-  const convertToNumber = (value: string): number => {
-    const num = parseFloat(value);
-    return isNaN(num) ? 0 : num;
-  };
-
-  // Prepare data for individual metric charts
-  const prepareMetricData = (metric: 'inflation' | 'growth' | 'gdp') => {
-    return memberAnalysisData.map(item => ({
-      month: item.month,
-      actual: convertToNumber(item[`${metric}_actual`]),
-      predicted: convertToNumber(item[`${metric}_predicted`]),
-      error: convertToNumber(item[`${metric}_error`])
-    }));
-  };
-
   // Custom tooltip for charts
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -175,6 +161,61 @@ const MPCDiscussions: React.FC = () => {
       );
     }
     return null;
+  };
+
+  // Component to display text-based analysis data
+  const TextAnalysisCard: React.FC<{
+    title: string;
+    data: MemberAnalysisData[];
+    metric: 'inflation' | 'growth' | 'gdp';
+    icon: React.ReactNode;
+    color: string;
+  }> = ({ title, data, metric, icon, color }) => {
+    return (
+      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            <div className={`${color} rounded-full p-3 mr-3`}>
+              {icon}
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+          </div>
+        </div>
+        
+        <div className="space-y-4 max-h-96 overflow-y-auto">
+          {data.map((item, index) => (
+            <div key={index} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-50 rounded-r-lg">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold text-gray-900">{item.month_year}</span>
+                <span className="text-sm text-gray-500">{item.month}</span>
+              </div>
+              
+              <div className="space-y-2 text-sm">
+                <div className="flex items-start">
+                  <span className="font-medium text-green-700 w-20 flex-shrink-0">Actual:</span>
+                  <span className="text-gray-700">{item[`${metric}_actual`] || 'No data'}</span>
+                </div>
+                <div className="flex items-start">
+                  <span className="font-medium text-blue-700 w-20 flex-shrink-0">Predicted:</span>
+                  <span className="text-gray-700">{item[`${metric}_predicted`] || 'No data'}</span>
+                </div>
+                <div className="flex items-start">
+                  <span className="font-medium text-red-700 w-20 flex-shrink-0">Error:</span>
+                  <span className="text-gray-700">{item[`${metric}_error`] || 'No data'}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {data.length === 0 && (
+          <div className="text-center py-8">
+            <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500">No data available for this selection</p>
+          </div>
+        )}
+      </div>
+    );
   };
 
   if (loading) {
@@ -212,7 +253,7 @@ const MPCDiscussions: React.FC = () => {
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2">MPC Discussions and Macroeconomic Variables</h1>
               <p className="text-xl text-blue-100 max-w-3xl">
-                Analyze correlation patterns and member-specific forecasting performance
+                Analyze correlation patterns and member-specific forecasting insights
               </p>
             </div>
           </div>
@@ -277,7 +318,7 @@ const MPCDiscussions: React.FC = () => {
 
         {/* Correlation Plots Section */}
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Correlation Plots</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Correlation Analysis</h2>
           
           {/* Correlation Controls */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -361,7 +402,7 @@ const MPCDiscussions: React.FC = () => {
           {/* Correlation Chart */}
           <div className="bg-gray-50 rounded-2xl p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              MPC Discussion Focus vs. Inflation ({correlationYear})
+              MPC Discussion Focus Analysis Score ({correlationYear})
             </h3>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart data={correlationData}>
@@ -394,7 +435,7 @@ const MPCDiscussions: React.FC = () => {
 
         {/* Member Analysis Section */}
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Member Analysis</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Member Economic Analysis</h2>
           
           {/* Member Analysis Controls */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -483,158 +524,60 @@ const MPCDiscussions: React.FC = () => {
             </div>
           </div>
 
-          {/* Analysis Charts */}
+          {/* Text-based Analysis Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Inflation Chart */}
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Inflation</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={prepareMetricData('inflation')}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis 
-                    dataKey="month" 
-                    tick={{ fontSize: 10, fill: "#6B7280" }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis 
-                    tick={{ fontSize: 10, fill: "#6B7280" }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="actual"
-                    stroke="#10B981"
-                    strokeWidth={2}
-                    dot={{ fill: "#10B981", strokeWidth: 2, r: 4 }}
-                    name="Actual"
-                    connectNulls={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="predicted"
-                    stroke="#3B82F6"
-                    strokeWidth={2}
-                    dot={{ fill: "#3B82F6", strokeWidth: 2, r: 4 }}
-                    name="Predicted"
-                    connectNulls={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="error"
-                    stroke="#EF4444"
-                    strokeWidth={2}
-                    dot={{ fill: "#EF4444", strokeWidth: 2, r: 4 }}
-                    name="Error"
-                    connectNulls={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Growth Chart */}
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Growth</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={prepareMetricData('growth')}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis 
-                    dataKey="month" 
-                    tick={{ fontSize: 10, fill: "#6B7280" }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis 
-                    tick={{ fontSize: 10, fill: "#6B7280" }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="actual"
-                    stroke="#10B981"
-                    strokeWidth={2}
-                    dot={{ fill: "#10B981", strokeWidth: 2, r: 4 }}
-                    name="Actual"
-                    connectNulls={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="predicted"
-                    stroke="#3B82F6"
-                    strokeWidth={2}
-                    dot={{ fill: "#3B82F6", strokeWidth: 2, r: 4 }}
-                    name="Predicted"
-                    connectNulls={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="error"
-                    stroke="#EF4444"
-                    strokeWidth={2}
-                    dot={{ fill: "#EF4444", strokeWidth: 2, r: 4 }}
-                    name="Error"
-                    connectNulls={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* GDP Chart */}
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">GDP</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={prepareMetricData('gdp')}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis 
-                    dataKey="month" 
-                    tick={{ fontSize: 10, fill: "#6B7280" }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis 
-                    tick={{ fontSize: 10, fill: "#6B7280" }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="actual"
-                    stroke="#10B981"
-                    strokeWidth={2}
-                    dot={{ fill: "#10B981", strokeWidth: 2, r: 4 }}
-                    name="Actual"
-                    connectNulls={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="predicted"
-                    stroke="#3B82F6"
-                    strokeWidth={2}
-                    dot={{ fill: "#3B82F6", strokeWidth: 2, r: 4 }}
-                    name="Predicted"
-                    connectNulls={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="error"
-                    stroke="#EF4444"
-                    strokeWidth={2}
-                    dot={{ fill: "#EF4444", strokeWidth: 2, r: 4 }}
-                    name="Error"
-                    connectNulls={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            <TextAnalysisCard
+              title="Inflation Analysis"
+              data={memberAnalysisData}
+              metric="inflation"
+              icon={<TrendingUp className="w-6 h-6 text-white" />}
+              color="bg-red-500"
+            />
+            
+            <TextAnalysisCard
+              title="Growth Analysis"
+              data={memberAnalysisData}
+              metric="growth"
+              icon={<BarChart3 className="w-6 h-6 text-white" />}
+              color="bg-green-500"
+            />
+            
+            <TextAnalysisCard
+              title="GDP Analysis"
+              data={memberAnalysisData}
+              metric="gdp"
+              icon={<Activity className="w-6 h-6 text-white" />}
+              color="bg-blue-500"
+            />
           </div>
+
+          {/* Summary Section */}
+          {memberAnalysisData.length > 0 && (
+            <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
+              <div className="flex items-center mb-4">
+                <FileText className="w-6 h-6 text-blue-600 mr-3" />
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Analysis Summary for {selectedMember} ({analysisYear})
+                </h3>
+              </div>
+              <p className="text-gray-700 leading-relaxed">
+                This analysis shows the qualitative assessments and insights provided by {selectedMember} 
+                regarding inflation, growth, and GDP trends throughout {analysisYear}. The data reflects 
+                the member's perspective on actual economic conditions, predicted trends, and identified 
+                areas of concern or error in forecasting.
+              </p>
+              <div className="mt-4 flex items-center text-sm text-gray-600">
+                <span className="inline-flex items-center px-2 py-1 rounded-full bg-blue-100 text-blue-800 mr-4">
+                  <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
+                  {memberAnalysisData.length} monthly entries
+                </span>
+                <span className="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-800">
+                  <span className="w-2 h-2 bg-green-600 rounded-full mr-2"></span>
+                  Qualitative analysis
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
