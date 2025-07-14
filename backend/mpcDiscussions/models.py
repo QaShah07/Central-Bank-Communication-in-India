@@ -17,20 +17,20 @@ class MPCDiscussion(models.Model):
         help_text="Internal or External member"
     )
     
-    # Inflation data
-    inflation_actual = models.CharField(max_length=50, help_text="Actual inflation value")
-    inflation_predicted = models.CharField(max_length=50, help_text="Predicted inflation value")
-    inflation_error = models.CharField(max_length=50, help_text="Inflation error value")
+    # Inflation data - Changed to store analysis strings
+    inflation_actual = models.CharField(max_length=500, help_text="Actual inflation analysis", blank=True, null=True)
+    inflation_predicted = models.CharField(max_length=500, help_text="Predicted inflation analysis", blank=True, null=True)
+    inflation_error = models.CharField(max_length=500, help_text="Inflation error analysis", blank=True, null=True)
     
-    # Growth data
-    growth_actual = models.CharField(max_length=50, help_text="Actual growth value")
-    growth_predicted = models.CharField(max_length=50, help_text="Predicted growth value")
-    growth_error = models.CharField(max_length=50, help_text="Growth error value")
+    # Growth data - Changed to store analysis strings
+    growth_actual = models.CharField(max_length=500, help_text="Actual growth analysis", blank=True, null=True)
+    growth_predicted = models.CharField(max_length=500, help_text="Predicted growth analysis", blank=True, null=True)
+    growth_error = models.CharField(max_length=500, help_text="Growth error analysis", blank=True, null=True)
     
-    # GDP data
-    gdp_actual = models.CharField(max_length=50, help_text="Actual GDP value")
-    gdp_predicted = models.CharField(max_length=50, help_text="Predicted GDP value")
-    gdp_error = models.CharField(max_length=50, help_text="GDP error value")
+    # GDP data - Changed to store analysis strings
+    gdp_actual = models.CharField(max_length=500, help_text="Actual GDP analysis", blank=True, null=True)
+    gdp_predicted = models.CharField(max_length=500, help_text="Predicted GDP analysis", blank=True, null=True)
+    gdp_error = models.CharField(max_length=500, help_text="GDP error analysis", blank=True, null=True)
     
     # Analysis score for correlation plot
     analysis_score = models.FloatField(
